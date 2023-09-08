@@ -94,32 +94,52 @@ struct Node {
     Node* left;
     Node* right;
 };*/
-class Solution{
-    public:
-       // 1st method -> using 2 stacks.
+
+// 2nd Method -> using one stack (iterative)
+
+/*
+NOTE:-
+
+You Need to Memorize this and Other similar Standard Ones.
+only one way to solve.
+*/
+
+class Solution
+{
+public:
     vector<int> postOrder(Node *curr)
     {
         vector<int> postOrder;
         if (curr == NULL)
             return postOrder;
 
-        stack<Node *> s1;
-        stack<Node *> s2;
-        s1.push(curr);
-        while (!s1.empty())
+        stack<Node *> st;
+        while (curr != NULL || !st.empty())
         {
-            curr = s1.top();
-            s1.pop();
-            s2.push(curr);
-            if (curr->left != NULL)
-                s1.push(curr->left);
-            if (curr->right != NULL)
-                s1.push(curr->right);
-        }
-        while (!s2.empty())
-        {
-            postOrder.push_back(s2.top()->data);
-            s2.pop();
+            if (curr != NULL)
+            {
+                st.push(curr);
+                curr = curr->left;
+            }
+            else
+            {
+                Node *temp = st.top()->right;
+                if (temp == NULL)
+                {
+                    temp = st.top();
+                    st.pop();
+                    postOrder.push_back(temp->data);
+
+                    while (!st.empty() && temp == st.top()->right)
+                    {
+                        temp = st.top();
+                        st.pop();
+                        postOrder.push_back(temp->data);
+                    }
+                }
+                else
+                    curr = temp;
+            }
         }
         return postOrder;
     }
